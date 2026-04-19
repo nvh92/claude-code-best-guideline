@@ -1,0 +1,40 @@
+---
+name: skill-name
+description: |
+  [Mô tả skill làm gì — viết như bạn nói với Claude.
+  Use when: [các tình huống Claude nên tự gọi skill này]]
+# Uncomment options as needed:
+# disable-model-invocation: true   # Claude sẽ không tự gọi skill này
+# user-invocable: false            # Ẩn khỏi / menu
+# allowed-tools: Bash(npm *), Read, Grep, Glob
+# context: fork                    # Chạy trong subagent riêng
+# agent: Explore                   # Built-in: Explore | Plan | General
+# model: sonnet                    # Override model: haiku | sonnet | opus
+# argument-hint: "<arg>"           # Gợi ý argument khi autocomplete
+---
+
+# [Skill Name]
+
+## Mục tiêu
+[Mô tả ngắn — skill này làm gì và tại sao cần]
+
+## Input
+$ARGUMENTS — [Mô tả argument nhận vào]
+
+## Các bước thực hiện
+
+1. **[Bước 1]**
+   [Mô tả chi tiết]
+
+2. **[Bước 2]**
+   [Mô tả chi tiết]
+
+3. **[Bước 3]**
+   [Mô tả chi tiết]
+
+## Output mong đợi
+[Mô tả kết quả sau khi skill chạy xong]
+
+## Notes
+- [Lưu ý quan trọng]
+- [Edge cases cần xử lý]

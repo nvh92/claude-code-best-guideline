@@ -1,0 +1,41 @@
+# feat-[feature-name]
+<!--
+  Naming: <type>-<feature>.md
+  Types: feat, fix, refactor, chore
+  Example: feat-auth-oauth.md, fix-perf-dashboard.md
+-->
+
+## Status: BACKLOG
+<!-- BACKLOG | IN PROGRESS | DONE -->
+
+## Problem
+[Mô tả vấn đề cần giải quyết — tại sao feature này cần thiết]
+
+## Approach
+[Hướng giải quyết đã chọn + lý do chọn approach này thay vì các alternatives]
+
+## Tasks
+- [ ] [Task 1]
+- [ ] [Task 2]
+- [ ] [Task 3]
+- [ ] Tests
+- [ ] Review & cleanup
+
+## Decisions
+<!--
+  Ghi lại các quyết định kỹ thuật quan trọng đã chốt.
+  Format: "Dùng X thay vì Y vì [lý do]"
+-->
+- [Decision 1]
+- [Decision 2]
+
+## Out of scope
+<!--
+  Những gì sẽ KHÔNG làm trong feature này.
+  Giúp tránh scope creep.
+-->
+- [Item 1]
+- [Item 2]
+
+## Notes
+[Thông tin bổ sung, links, references]

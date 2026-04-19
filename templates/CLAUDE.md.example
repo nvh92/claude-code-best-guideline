@@ -1,0 +1,57 @@
+# CLAUDE.md
+<!--
+  Giữ ngắn — dưới 150 dòng.
+  Chỉ include những gì Claude không thể tự biết.
+  Test từng rule: nếu Claude đã làm đúng mà không cần → xóa.
+-->
+
+## Project
+[1-2 câu mô tả app là gì và mục tiêu chính]
+
+## Stack
+- Backend: [e.g. FastAPI + PostgreSQL + SQLAlchemy]
+- Frontend: [e.g. Next.js + TypeScript + Tailwind]
+- Infra: [e.g. Docker + GitHub Actions]
+
+## Commands
+```bash
+# Development
+npm run dev          # Start dev server (port 3000)
+uvicorn main:app --reload   # Start API server (port 8000)
+
+# Testing
+npm test             # Run frontend tests
+pytest               # Run backend tests
+pytest -k "test_auth"  # Run specific test
+
+# Code quality
+npm run lint         # Lint & format frontend
+ruff check . --fix   # Lint backend
+```
+
+## Conventions
+- Branch naming: `feat/`, `fix/`, `chore/` prefix
+- Commit format: `type(scope): description` (Conventional Commits)
+- [Add only what differs from standard conventions]
+
+## Architecture notes
+- [Key architectural decisions Claude needs to know]
+- [e.g. "Service layer in back/app/services/, không đặt business logic trong routes"]
+- [e.g. "Dùng repository pattern — query qua repo classes, không trực tiếp trong service"]
+
+## YOU MUST
+- Chạy tests trước khi báo task hoàn thành
+- Không commit trực tiếp vào main — luôn tạo branch mới
+- [Add your non-negotiable rules here]
+
+---
+
+## Current State
+<!-- Claude cập nhật cuối mỗi session — không xóa section này -->
+- **Last session:** [ngày] — [những gì đã xong]
+- **In progress:** [feature/task đang làm dở]
+- **Next:** [bước tiếp theo cụ thể]
+
+## Key Decisions
+<!-- Không xóa — append khi có decision mới -->
+- [Decision] — [lý do] — [ngày]
