@@ -1,9 +1,8 @@
-# Claude Code — Best Practices & Tips
-
 <div align="center">
 
-**Hướng dẫn thực chiến cho Claude Code CLI**
+# Claude Code — Best Practices & Tips
 
+**Hướng dẫn thực chiến cho Claude Code CLI**
 Tổng hợp từ Anthropic official docs, Boris (creator of Claude Code), và community patterns thực tế.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

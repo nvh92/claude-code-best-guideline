@@ -1,9 +1,8 @@
-# Claude Code — Best Practices & Tips
-
 <div align="center">
 
-**A practical guide to Claude Code CLI**
+# Claude Code — Best Practices & Tips
 
+**A practical guide to Claude Code CLI** 
 Compiled from Anthropic official docs, Boris (creator of Claude Code), and real-world community patterns.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
