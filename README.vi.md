@@ -157,11 +157,11 @@ Claude Code's system prompt đã có ~50 instructions sẵn. CLAUDE.md quá dài
 - Long explanations / tutorials
 ```
 
-**Tips tăng adherence:**
-- Dùng `IMPORTANT` và `YOU MUST` cho rules tuyệt đối
-- Test từng rule: nếu Claude đã làm đúng mà không cần → xóa đi
-- Dùng `@import` để modular hóa thay vì nhét tất cả vào một file
-- Check CLAUDE.md vào git để cả team đều được hưởng
+> **Tips tăng adherence:**
+> - Dùng `IMPORTANT` và `YOU MUST` cho rules tuyệt đối
+> - Test từng rule: nếu Claude đã làm đúng mà không cần → xóa đi
+> - Dùng `@import` để modular hóa thay vì nhét tất cả vào một file
+> - Check CLAUDE.md vào git để cả team đều được hưởng
 
 ### Template cơ bản
 
@@ -645,12 +645,11 @@ Claude Code không load đầy đủ tool schemas khi start — chỉ load tên,
 | **Figma MCP** | Đọc design, implement từ Figma |
 | **Notion MCP** | Đọc/viết tasks và documents |
 
-```
-Tips:
-- Cài gh CLI để Claude dùng GitHub API hiệu quả hơn
-- Claude tự học CLI mới: "Dùng foo-cli --help để học cách dùng, rồi giải quyết X."
-- Dùng /permissions để allowlist domains Claude được phép fetch
-```
+> **Tip:**
+> - Cài gh CLI để Claude dùng GitHub API hiệu quả hơn
+> - Claude tự học CLI mới: "Dùng foo-cli --help để học cách dùng, rồi giải quyết X."
+> - Dùng /permissions để allowlist domains Claude được phép fetch
+
 
 ---
 

@@ -157,11 +157,12 @@ Claude Code's system prompt already has ~50 built-in instructions. A too-long CL
 - Long explanations / tutorials
 ```
 
-**Tips to increase adherence:**
-- Use `IMPORTANT` and `YOU MUST` for absolute rules
-- Test each rule: if Claude already does it right without the rule → delete it
-- Use `@import` to modularize instead of cramming everything into one file
-- Commit CLAUDE.md to git so the whole team benefits
+> **Tips to increase adherence:**
+> - Use `IMPORTANT` and `YOU MUST` for absolute rules
+> - Test each rule: if Claude already does it right without the rule → delete it
+> - Use `@import` to modularize instead of cramming everything into one file
+> - Commit `CLAUDE.md` to git so the whole team benefits
+
 
 ### Basic template
 
@@ -634,12 +635,11 @@ Claude Code doesn't load full tool schemas on start — only loads names, fetche
 | **Figma MCP** | Read designs, implement from Figma |
 | **Notion MCP** | Read/write tasks and documents |
 
-```
-Tips:
-- Install gh CLI for Claude to use GitHub API more effectively
-- Claude can learn new CLIs: "Use foo-cli --help to learn how to use it, then solve X."
-- Use /permissions to allowlist domains Claude can fetch
-```
+
+> **Tip:**
+> - Install gh CLI for Claude to use GitHub API more effectively
+> - Claude can learn new CLIs: Use `foo-cli --help` to learn how to use it, then solve X.
+> - Use `/permissions` to allowlist domains Claude can fetch
 
 ---
 
