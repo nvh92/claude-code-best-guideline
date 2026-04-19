@@ -2,85 +2,85 @@
 
 <div align="center">
 
-**Hướng dẫn thực chiến cho Claude Code CLI**
+**A practical guide to Claude Code CLI**
 
-Tổng hợp từ Anthropic official docs, Boris (creator of Claude Code), và community patterns thực tế.
+Compiled from Anthropic official docs, Boris (creator of Claude Code), and real-world community patterns.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Language](https://img.shields.io/badge/Language-Vietnamese%20%7C%20English-blue)](#)
 
-[🇻🇳 Tiếng Việt](#) · [🇬🇧 English](./README.en.md)
+[🇻🇳 Tiếng Việt](./README.vi.md) · [🇬🇧 English](#)
 
 </div>
 
 ---
 
-## Tài nguyên tham khảo
+## Key Resources
 
-| Nguồn | Dùng khi |
+| Source | When to use |
 |---|---|
-| [Anthropic Official Docs](https://docs.anthropic.com/en/docs/claude-code) | Source of truth — đọc đầu tiên |
-| [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Tìm plugin cài ngay: `/plugin install <name>@claude-plugins-official` |
-| [everything-claude-code](https://github.com/affaan-m/everything-claude-code) | Skills, hooks, commands, agents mẫu — copy & customize |
-| [awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents) | Thư viện 100+ subagent chuyên biệt |
+| [Anthropic Official Docs](https://docs.anthropic.com/en/docs/claude-code) | Source of truth — read first |
+| [claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Find ready-to-install plugins: `/plugin install <name>@claude-plugins-official` |
+| [everything-claude-code](https://github.com/affaan-m/everything-claude-code) | Sample skills, hooks, commands, agents — copy & customize |
+| [awesome-claude-code-subagents](https://github.com/VoltAgent/awesome-claude-code-subagents) | Library of 100+ specialized subagents |
 
 ---
 
-## Mục lục
+## Table of Contents
 
-| Chủ đề | Tóm tắt |
+| Topic | Summary |
 |---|---|
-| [1. Claude Code là gì?](#1-claude-code-là-gì) | Agent thực thi, không phải chatbot |
-| [2. Bộ công cụ cốt lõi](#2-bộ-công-cụ-cốt-lõi) | Khi nào dùng cái gì |
-| [3. CLAUDE.md](#3-claudemd--bộ-não-của-dự-án) | Memory của project — phân cấp & rules/ |
-| [4. Skills](#4-skills--quy-trình-tái-sử-dụng) | Slash commands tái sử dụng |
-| [5. Plugins](#5-plugins--skills-đóng-gói-sẵn) | Cài một lệnh, có ngay bộ tools |
-| [6. Subagents](#6-subagents--delegation--song-song) | Delegation & parallel work |
-| [7. Hooks](#7-hooks--tự-động-hóa-deterministic) | Automation không bao giờ bỏ qua |
-| [8. Plan Mode](#8-plan-mode--thiết-kế-trước-khi-xây) | Explore → Plan → Implement |
-| [9. Context Management & Session Handoff](#9-context-management--tài-nguyên-quý-nhất) | Giữ context sạch + không mất tiến độ |
-| [10. MCP](#10-mcp--kết-nối-công-cụ-ngoài) | Kết nối GitHub, DB, Figma... |
-| [11. Git Worktrees](#11-git-worktrees--song-song-an-toàn) | Nhiều AI sessions song song |
-| [12. Prompting hiệu quả](#12-prompting-hiệu-quả) | Viết prompt ra kết quả tốt |
-| [13. Anti-patterns](#13-anti-patterns-phổ-biến) | Những lỗi hay gặp & cách sửa |
-| [14. Quick Reference](#14-quick-reference) | Bảng lệnh tra nhanh |
+| [1. What is Claude Code?](#1-what-is-claude-code) | An execution agent, not a chatbot |
+| [2. Core Toolkit](#2-core-toolkit) | When to use what |
+| [3. CLAUDE.md](#3-claudemd--the-projects-brain) | Project memory — hierarchy & rules/ |
+| [4. Skills](#4-skills--reusable-workflows) | Reusable slash commands |
+| [5. Plugins](#5-plugins--pre-packaged-skills) | Install once, get everything |
+| [6. Subagents](#6-subagents--delegation--parallelism) | Delegation & parallel work |
+| [7. Hooks](#7-hooks--deterministic-automation) | Automation that never gets skipped |
+| [8. Plan Mode](#8-plan-mode--design-before-you-build) | Explore → Plan → Implement |
+| [9. Context Management & Session Handoff](#9-context-management--your-most-precious-resource) | Keep context clean + never lose progress |
+| [10. MCP](#10-mcp--connecting-external-tools) | Connect GitHub, DB, Figma... |
+| [11. Git Worktrees](#11-git-worktrees--safe-parallelism) | Multiple AI sessions in parallel |
+| [12. Effective Prompting](#12-effective-prompting) | Write prompts that get good results |
+| [13. Anti-patterns](#13-common-anti-patterns) | Common mistakes and how to fix them |
+| [14. Quick Reference](#14-quick-reference) | Command cheat sheet |
 
 ---
 
-## 1. Claude Code là gì?
+## 1. What is Claude Code?
 
-> Claude Code là **general agent** — không phải autocomplete, không phải chatbot. Nó đọc file, chạy lệnh, sửa code, quản lý git, kết nối dịch vụ ngoài, và làm việc tự động khi bạn vắng mặt.
+> Claude Code is a **general agent** — not autocomplete, not a chatbot. It reads files, runs commands, edits code, manages git, connects to external services, and works autonomously while you're away.
 
-### So sánh với chat thông thường
+### Comparison with regular chat
 
-| Chat thường | Claude Code CLI |
+| Regular Chat | Claude Code CLI |
 |---|---|
-| Trả lời câu hỏi | Thực thi hành động trong codebase |
-| Mỗi cuộc trò chuyện độc lập | Session có context, resume được |
-| Bạn copy-paste code | Claude đọc/viết file trực tiếp |
-| Không biết repo của bạn | Hiểu toàn bộ cấu trúc project |
-| Một luồng xử lý | Chạy song song nhiều sessions |
+| Answers questions | Executes actions in the codebase |
+| Each conversation is independent | Sessions have context, resumable |
+| You copy-paste code | Claude reads/writes files directly |
+| Doesn't know your repo | Understands the full project structure |
+| Single thread | Can run multiple sessions in parallel |
 
-### Mô hình hoạt động
+### How it works
 
 ```
-Bạn mô tả kết quả
+You describe the outcome
     ↓
-Claude explore + plan + implement
+Claude explores + plans + implements
     ↓
-Bạn review + redirect
+You review + redirect
 ```
 
 ---
 
-## 2. Bộ công cụ cốt lõi
+## 2. Core Toolkit
 
-**Hiểu khi nào dùng cái gì quan trọng hơn biết cái gì tồn tại.**
+**Understanding when to use what matters more than knowing what exists.**
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    MCP Servers                          │
-│         (Kết nối GitHub, DB, Figma, Notion...)         │
+│              (GitHub, DB, Figma, Notion...)             │
 ├─────────────────────────────────────────────────────────┤
 │  CLAUDE.md  │  Skills  │  Subagents  │  Hooks          │
 │  (Memory)   │  (Reuse) │  (Parallel) │  (Auto)         │
@@ -89,90 +89,90 @@ Bạn review + redirect
 └─────────────────────────────────────────────────────────┘
 ```
 
-| Công cụ | Dùng khi | Ví dụ |
+| Tool | Use when | Example |
 |---|---|---|
-| **CLAUDE.md** | Cần Claude nhớ context mọi session | Stack, conventions, commands |
-| **Skills** | Workflow lặp lại nhiều lần | `/new-feature`, `/deploy`, `/review` |
-| **Plugins** | Cần workflow phổ biến, cài ngay | PR review, frontend design |
-| **Subagents** | Task cần expertise riêng hoặc song song | Security review, test generation |
-| **Hooks** | Hành động phải xảy ra mọi lúc, không exception | Lint sau edit, notify khi xong |
-| **Plan Mode** | Task phức tạp, nhiều file, chưa rõ hướng | Refactor lớn, feature mới |
-| **MCP** | Kết nối service bên ngoài | GitHub PRs, database queries |
-| **Git Worktrees** | Nhiều AI task chạy song song | Feature A + Feature B cùng lúc |
+| **CLAUDE.md** | Claude needs to remember context every session | Stack, conventions, commands |
+| **Skills** | Repeated workflows | `/new-feature`, `/deploy`, `/review` |
+| **Plugins** | Need a common workflow installed quickly | PR review, frontend design |
+| **Subagents** | Task needs specialist expertise or parallelism | Security review, test generation |
+| **Hooks** | Actions that must happen every time, no exceptions | Lint after edit, notify when done |
+| **Plan Mode** | Complex task, multiple files, unclear direction | Large refactor, new feature |
+| **MCP** | Connect to external services | GitHub PRs, database queries |
+| **Git Worktrees** | Multiple AI tasks running in parallel | Feature A + Feature B simultaneously |
 
 ---
 
-## 3. CLAUDE.md — Bộ não của dự án
+## 3. CLAUDE.md — The Project's Brain
 
-### Cơ chế tải tự động
+### Auto-loading mechanism
 
-CLAUDE.md được load **tự động** mỗi session. Hệ thống phân cấp từ global → local:
+CLAUDE.md is loaded **automatically** every session. Hierarchy from global → local:
 
 ```
-~/.claude/CLAUDE.md              ← Global (áp dụng mọi project)
-~/.claude/rules/                 ← Global rules tách thành nhiều files nhỏ theo topic
-    ├── code-style.md            ← Mỗi file = 1 chủ đề, load cùng lúc với CLAUDE.md
+~/.claude/CLAUDE.md              ← Global (applies to all projects)
+~/.claude/rules/                 ← Global rules split into topic files, all auto-loaded
+    ├── code-style.md            ← Each file = 1 topic, loaded alongside CLAUDE.md
     ├── security.md
     └── workflow.md
-project/CLAUDE.md                ← Project-wide (commit vào git)
-project/CLAUDE.local.md          ← Cá nhân (gitignore, không commit)
-project/front/CLAUDE.md          ← Load khi làm việc trong front/
-project/back/CLAUDE.md           ← Load khi làm việc trong back/
+project/CLAUDE.md                ← Project-wide (commit to git)
+project/CLAUDE.local.md          ← Personal (gitignore, never commit)
+project/front/CLAUDE.md          ← Loaded when working in front/
+project/back/CLAUDE.md           ← Loaded when working in back/
 ```
 
-**Dùng `~/.claude/rules/` khi nào?**
+**When to use `~/.claude/rules/`?**
 
-Thay vì nhét mọi thứ vào một file `~/.claude/CLAUDE.md` dài → tách thành files nhỏ theo chủ đề. Claude load tất cả files trong `rules/` tự động, không cần khai báo.
+Instead of cramming everything into one long `~/.claude/CLAUDE.md` → split into small files by topic. Claude loads all files in `rules/` automatically, no registration needed.
 
 ```
-# Ví dụ cách tổ chức rules/
+# Example rules/ organization
 ~/.claude/rules/
-    ├── code-style.md     ← Quy tắc format, naming chung cho mọi project
-    ├── security.md       ← Các rule bảo mật bắt buộc
-    ├── git.md            ← Convention commit, branch, PR
-    └── no-do.md          ← Những gì Claude không được làm (override default)
+    ├── code-style.md     ← Formatting, naming conventions across all projects
+    ├── security.md       ← Mandatory security rules
+    ├── git.md            ← Commit, branch, PR conventions
+    └── no-do.md          ← Things Claude must never do (override defaults)
 ```
 
-> Khi bạn làm việc với `front/src/components/`, Claude tự load: Global + rules/ → Project → `front/` → `front/src/components/` (nếu có).
+> When you work with `front/src/components/`, Claude automatically loads: Global + rules/ → Project → `front/` → `front/src/components/` (if exists).
 
-### Nguyên tắc viết CLAUDE.md tốt
+### Principles for a good CLAUDE.md
 
-**Giữ ngắn — dưới 150 dòng cho root CLAUDE.md**
+**Keep it short — under 150 lines for root CLAUDE.md**
 
-Claude Code's system prompt đã có ~50 instructions sẵn. CLAUDE.md quá dài → Claude bắt đầu bỏ qua rules ở giữa.
+Claude Code's system prompt already has ~50 built-in instructions. A too-long CLAUDE.md causes Claude to start ignoring rules in the middle.
 
 ```markdown
-# ✅ NÊN include — Claude không tự biết
-- Bash commands để chạy project
-- Code style khác default (tab thay space, line width 120)
-- Branch naming convention của team
-- Gotchas cụ thể của project này
-- Required env vars để chạy local
+# ✅ INCLUDE — what Claude can't know on its own
+- Bash commands to run the project
+- Code style differences from default (tabs vs spaces, line width 120)
+- Team branch naming conventions
+- Project-specific gotchas
+- Required env vars to run locally
 
-# ❌ KHÔNG include — Claude đã biết hoặc không cần thiết
+# ❌ EXCLUDE — Claude already knows or doesn't need
 - "Write clean code"
 - Standard language conventions
-- Thông tin thay đổi thường xuyên
-- File-by-file description của codebase
+- Frequently changing information
+- File-by-file codebase descriptions
 - Long explanations / tutorials
 ```
 
-**Tips tăng adherence:**
-- Dùng `IMPORTANT` và `YOU MUST` cho rules tuyệt đối
-- Test từng rule: nếu Claude đã làm đúng mà không cần → xóa đi
-- Dùng `@import` để modular hóa thay vì nhét tất cả vào một file
-- Check CLAUDE.md vào git để cả team đều được hưởng
+**Tips to increase adherence:**
+- Use `IMPORTANT` and `YOU MUST` for absolute rules
+- Test each rule: if Claude already does it right without the rule → delete it
+- Use `@import` to modularize instead of cramming everything into one file
+- Commit CLAUDE.md to git so the whole team benefits
 
-### Template cơ bản
+### Basic template
 
 ````markdown
 # CLAUDE.md
 
 ## Project
-[1-2 câu mô tả app là gì]
+[1-2 sentences describing what the app is]
 
 ## Stack
-[Tech stack ngắn gọn]
+[Brief tech stack]
 
 ## Commands
 ```bash
@@ -182,162 +182,151 @@ npm run lint     # Lint code
 ```
 
 ## Conventions
-- [Chỉ những gì khác default]
+- [Only what differs from defaults]
 
 ## YOU MUST
-- [Rule tuyệt đối không được vi phạm]
+- [Rules that must never be broken]
 ````
 
-Xem thêm: [templates/CLAUDE.md.example](./templates/CLAUDE.md.example)
-
-### Dùng `@import` để modular hóa
-
-```markdown
-# CLAUDE.md
-See @README.md for project overview.
-
-## Workflows
-- Git: @docs/git-workflow.md
-- Testing: @docs/testing-guide.md
-```
+See: [templates/CLAUDE.md.example](./templates/CLAUDE.md.example)
 
 ---
 
-## 4. Skills — Quy trình tái sử dụng
+## 4. Skills — Reusable Workflows
 
-### Skills là gì
+### What are Skills
 
-Skills = workflow đóng gói thành file `.claude/skills/<name>/SKILL.md`. Mỗi skill tự động có slash command `/name`.
+Skills = workflows packaged into `.claude/skills/<name>/SKILL.md` files. Each skill automatically gets a slash command `/name`.
 
-> Kể từ 2026, skills và commands đã được hợp nhất — `.claude/commands/` vẫn hoạt động nhưng cách chuẩn là `.claude/skills/`.
+> As of 2026, skills and commands have been merged — `.claude/commands/` still works but `.claude/skills/` is the standard.
 
-### Frontmatter quan trọng
+### Key frontmatter
 
 ```yaml
 ---
 name: fix-bug                    # → slash command /fix-bug
-description: |                   # Claude dùng để auto-invoke (semantic matching)
+description: |                   # Claude uses this for auto-invoke (semantic matching)
   Fix bugs in the codebase.
   Use when: user reports a bug, test fails, error in logs
-disable-model-invocation: true   # Claude KHÔNG tự gọi (dùng cho deploy, commit)
-user-invocable: false            # Ẩn khỏi / menu (background knowledge)
+disable-model-invocation: true   # Claude won't self-invoke (for deploy, commit)
+user-invocable: false            # Hide from / menu (background knowledge)
 allowed-tools: Bash(pytest *), Read, Grep
-context: fork                    # Chạy trong subagent riêng
-agent: Explore                   # Loại subagent khi context: fork
-model: sonnet                    # Override model cho skill này
-argument-hint: "<issue-id>"      # Gợi ý khi autocomplete
+context: fork                    # Run in separate subagent
+agent: Explore                   # Subagent type when context: fork
+model: sonnet                    # Override model for this skill
+argument-hint: "<issue-id>"      # Autocomplete hint
 ---
 ```
 
-### 3 loại skills
+### 3 types of skills
 
-**Loại 1: Auto-invoked** — Claude tự gọi khi task phù hợp
+**Type 1: Auto-invoked** — Claude calls it automatically when the task matches
 
 ```yaml
 ---
 name: api-conventions
-description: REST API conventions cho project này. Dùng khi tạo hoặc sửa API endpoint.
+description: REST API conventions for this project. Use when creating or editing an API endpoint.
 user-invocable: false
 ---
 # API Conventions
-- Dùng kebab-case cho URL
-- camelCase cho JSON fields
-- Mọi endpoint phải có operation_id
+- Use kebab-case for URLs
+- camelCase for JSON fields
+- Every endpoint must have an operation_id
 ```
 
-**Loại 2: User-invoked** — bạn gọi thủ công
+**Type 2: User-invoked** — you call it manually
 
 ```yaml
 ---
 name: deploy
-description: Deploy lên production
+description: Deploy to production
 disable-model-invocation: true
 allowed-tools: Bash(*)
 ---
 Deploy $ARGUMENTS:
-1. Chạy full test suite
+1. Run full test suite
 2. Build Docker image
-3. Push và deploy lên cluster
-4. Health check — rollback nếu fail
+3. Push and deploy to cluster
+4. Health check — rollback if failed
 ```
 
-**Loại 3: Subagent skill** — chạy trong context riêng
+**Type 3: Subagent skill** — runs in its own context, doesn't pollute main context
 
 ```yaml
 ---
 name: security-review
-description: Review code cho security issues
+description: Review code for security issues
 context: fork
 agent: Explore
 allowed-tools: Read, Grep, Glob
 ---
-Review $ARGUMENTS cho security vulnerabilities.
+Review $ARGUMENTS for security vulnerabilities.
 Report: file:line, severity (Critical/High/Medium/Low), suggested fix.
 ```
 
 ### Best practices
 
-- Description phải chứa keywords người dùng sẽ nói → Claude dùng semantic matching để auto-invoke
-- Dưới 500 dòng cho SKILL.md, tài liệu chi tiết đặt file riêng và `@reference`
-- `$ARGUMENTS` cho toàn bộ args, `$0 $1 $2` cho positional args
-- Whitelist lệnh cụ thể: `allowed-tools: Bash(pytest *)` thay vì toàn bộ `Bash(*)`
+- Description must contain keywords users will say → Claude uses semantic matching to auto-invoke
+- Keep SKILL.md under 500 lines; detailed docs go in separate files with `@reference`
+- `$ARGUMENTS` for all args, `$0 $1 $2` for positional args
+- Whitelist specific commands: `allowed-tools: Bash(pytest *)` instead of all `Bash(*)`
 
-Xem thêm: [templates/skill.md.example](./templates/skill.md.example) · [everything-claude-code/.claude/](https://github.com/affaan-m/everything-claude-code/tree/main/.claude)
+See: [templates/skill.md.example](./templates/skill.md.example) · [everything-claude-code/.claude/](https://github.com/affaan-m/everything-claude-code/tree/main/.claude)
 
 ---
 
-## 5. Plugins — Skills đóng gói sẵn
+## 5. Plugins — Pre-packaged Skills
 
-> Plugin = bundle gồm skills + hooks + agents + MCP servers. Cài một lệnh là có hết.
+> Plugin = bundle of skills + hooks + agents + MCP servers. Install once, get everything.
 
-### Cài plugin
+### Install plugins
 
 ```bash
-# Duyệt marketplace
+# Browse marketplace
 /plugin
 
-# Cài plugin cụ thể
+# Install specific plugin
 /plugin install frontend-design@claude-plugins-official
 /plugin install pr-review-toolkit@claude-plugins-official
 /plugin install feature-dev@claude-plugins-official
 ```
 
-### Plugins nổi bật
+### Featured plugins
 
-| Plugin | Dùng khi |
+| Plugin | Use when |
 |---|---|
-| **frontend-design** | Build UI — tự động invoke khi làm frontend, tránh "AI slop" aesthetics |
-| **feature-dev** | Guided feature workflow với 3 agents: code-explorer, code-architect, code-reviewer |
-| **pr-review-toolkit** | Review PR toàn diện: comments, tests, error handling, types |
-| **code-review** | 5 Sonnet agents song song: CLAUDE.md compliance, bug detection, PR history |
-| **aws-deploy** | Deploy lên AWS với architecture recommendations |
+| **frontend-design** | Build UI — auto-invoked for frontend work, avoids "AI slop" aesthetics |
+| **feature-dev** | Guided feature workflow with 3 agents: code-explorer, code-architect, code-reviewer |
+| **pr-review-toolkit** | Comprehensive PR review: comments, tests, error handling, types |
+| **code-review** | 5 parallel Sonnet agents: CLAUDE.md compliance, bug detection, PR history |
+| **aws-deploy** | Deploy to AWS with architecture recommendations |
 | **database** | Schema design, migrations, query optimization |
 
-### Khi nào dùng Plugin vs tự viết Skill
+### Plugin vs custom Skill
 
 ```
-Dùng Plugin khi:                  Tự viết Skill khi:
-✅ Workflow phổ biến               ✅ Convention riêng của project
-✅ Cần ngay, không muốn setup     ✅ Tích hợp với tools nội bộ
-✅ Có sẵn trong marketplace       ✅ Business logic đặc thù
-                                   ✅ Không có plugin phù hợp
+Use Plugin when:                  Write custom Skill when:
+✅ Common workflow                 ✅ Project-specific conventions
+✅ Need it now, no setup wanted   ✅ Integration with internal tools
+✅ Available in marketplace        ✅ Specific business logic
+                                   ✅ No suitable plugin exists
 ```
 
 ---
 
-## 6. Subagents — Delegation & Song song
+## 6. Subagents — Delegation & Parallelism
 
-### Tại sao cần Subagents
+### Why you need Subagents
 
-**Context poisoning:** Khi Claude research/explore codebase, nó đọc hàng trăm file → context window đầy với thông tin không liên quan → performance giảm đáng kể.
+**Context poisoning:** When Claude researches/explores the codebase, it reads hundreds of files → context window fills with irrelevant information → performance degrades significantly.
 
-Subagent chạy trong **context window riêng biệt**. Main conversation giữ sạch.
+Subagents run in their **own separate context window**. The main conversation stays clean.
 
-### Built-in subagents (không cần config)
+### Built-in subagents (no config needed)
 
-| Agent | Model | Tools | Dùng cho |
+| Agent | Model | Tools | Use for |
 |---|---|---|---|
-| **Explore** | Haiku (nhanh) | Read-only | Research, investigation |
+| **Explore** | Haiku (fast) | Read-only | Research, investigation |
 | **Plan** | Sonnet | Read-only | Architecture decisions |
 | **General** | Sonnet | Full access | Implementation tasks |
 
@@ -351,24 +340,24 @@ tools: Read, Grep, Bash
 model: sonnet
 ---
 
-Bạn là security engineer chuyên OWASP.
-Review: XSS, SQL injection, CSRF, auth bypass, data exposure.
-Format: Critical/High/Medium/Low với file:line và suggested fix.
+You are a security engineer specializing in OWASP.
+Review for: XSS, SQL injection, CSRF, auth bypass, data exposure.
+Format: Critical/High/Medium/Low with file:line and suggested fix.
 ```
 
-Đặt tại: `.claude/agents/security-auditor.md`
+Place at: `.claude/agents/security-auditor.md`
 
 ### Worktree Isolation (2026)
 
 ```yaml
-isolation: worktree   # Subagent làm việc trên git worktree riêng
+isolation: worktree   # Subagent works on its own git worktree
 ```
 
-Nhiều subagents có thể edit files song song mà không conflict. Worktree tự cleanup nếu không có changes.
+Multiple subagents can edit files in parallel without conflicts. Worktrees are automatically cleaned up if there are no changes.
 
-### Patterns hiệu quả
+### Effective patterns
 
-**Writer/Reviewer pattern — context sạch, review không bị bias:**
+**Writer/Reviewer pattern — clean context, unbiased review:**
 
 ```
 Session A: Implement rate limiter
@@ -378,43 +367,43 @@ Session B: Review rate limiter implementation
 **Parallel analysis:**
 
 ```
-"Dùng subagents song song:
- - Subagent 1: Review security của auth module
- - Subagent 2: Generate tests cho auth module
- Report kết quả về main session."
+"Use subagents in parallel:
+ - Subagent 1: Security review of auth module
+ - Subagent 2: Generate tests for auth module
+ Report results back to main session."
 ```
 
-**Investigation trước implementation:**
+**Investigation before implementation:**
 
 ```
-"Dùng subagent Explore để research codebase,
- tìm patterns hiện tại trong back/app/services/.
- Chỉ summary lại — không làm bẩn main context."
+"Use an Explore subagent to research the codebase,
+ find existing patterns in back/app/services/.
+ Just summarize — don't pollute the main context."
 ```
 
 ---
 
-## 7. Hooks — Tự động hóa deterministic
+## 7. Hooks — Deterministic Automation
 
 ### Hooks vs CLAUDE.md rules
 
 | | CLAUDE.md rules | Hooks |
 |---|---|---|
-| Tính chất | Advisory | Deterministic |
-| Có thể bị bỏ qua | Có | Không |
-| Cấu hình ở | CLAUDE.md | `.claude/settings.json` |
-| Dùng khi | Convention, style | Bắt buộc phải chạy |
+| Nature | Advisory | Deterministic |
+| Can be skipped | Yes | No |
+| Configured in | CLAUDE.md | `.claude/settings.json` |
+| Use when | Convention, style | Must always run |
 
 ### Lifecycle events
 
 ```
-PreToolUse    → Trước khi Claude dùng tool (có thể block action)
-PostToolUse   → Sau khi tool chạy xong
-Notification  → Khi Claude muốn thông báo với user
-Stop          → Khi Claude kết thúc task
+PreToolUse    → Before Claude uses a tool (can block the action)
+PostToolUse   → After a tool finishes running
+Notification  → When Claude wants to notify the user
+Stop          → When Claude finishes a task
 ```
 
-### Cấu hình trong `.claude/settings.json`
+### Configure in `.claude/settings.json`
 
 ```json
 {
@@ -432,7 +421,7 @@ Stop          → Khi Claude kết thúc task
       {
         "hooks": [{
           "type": "command",
-          "command": "osascript -e 'display notification \"Claude xong việc\" with title \"Claude Code\"'"
+          "command": "osascript -e 'display notification \"Claude finished\" with title \"Claude Code\"'"
         }]
       }
     ]
@@ -440,191 +429,191 @@ Stop          → Khi Claude kết thúc task
 }
 ```
 
-### Use cases thực tế
+### Real-world use cases
 
-| Hook | Trigger | Lệnh |
+| Hook | Trigger | Command |
 |---|---|---|
-| Auto lint | Sau mỗi Edit/Write | `ruff check . --fix` |
-| Auto format | Sau mỗi Edit/Write | `prettier --write` |
-| Desktop notify | Khi Stop | `osascript notification` |
-| Log session | Khi Start | Script ghi timestamp |
-| Block nguy hiểm | PreToolUse | Kiểm tra và exit nếu nguy hiểm |
+| Auto lint | After every Edit/Write | `ruff check . --fix` |
+| Auto format | After every Edit/Write | `prettier --write` |
+| Desktop notify | On Stop | `osascript notification` |
+| Log session | On Start | Timestamp script |
+| Block dangerous ops | PreToolUse | Check and exit if dangerous |
 
-> **Tip:** Dùng AI để viết hooks: `"Viết hook chạy eslint sau mỗi lần edit file TypeScript."`
+> **Tip:** Use AI to write hooks: `"Write a hook that runs eslint after every TypeScript file edit."`
 
 ---
 
-## 8. Plan Mode — Thiết kế trước khi xây
+## 8. Plan Mode — Design Before You Build
 
-### Kích hoạt
+### Activate
 
 ```bash
-claude --permission-mode plan     # Bắt đầu session ở Plan Mode
-Shift+Tab (2 lần)                 # Toggle trong session đang chạy
+claude --permission-mode plan     # Start session in Plan Mode
+Shift+Tab (twice)                 # Toggle during a running session
 ```
 
-Trong Plan Mode: Claude chỉ **đọc** (Read, Grep, Glob) — không edit, không chạy lệnh có side effect.
+In Plan Mode: Claude can only **read** (Read, Grep, Glob) — no edits, no commands with side effects.
 
-### Workflow 4 bước
+### 4-step workflow
 
 ```
 1. EXPLORE  (Plan Mode)
-   Claude đọc codebase, hiểu structure
-   → "Đọc @back/app/ và hiểu layered architecture hiện tại"
+   Claude reads codebase, understands structure
+   → "Read @back/app/ and understand the current layered architecture"
 
          ↓
 
 2. PLAN  (Plan Mode)
-   Claude tạo implementation plan chi tiết
-   → "Tôi muốn thêm OAuth. List tất cả files cần thay đổi và thứ tự."
-   → Ctrl+G để mở và edit plan trong editor trước khi proceed
+   Claude creates a detailed implementation plan
+   → "I want to add OAuth. List all files to change and in what order."
+   → Ctrl+G to open and edit the plan in your editor before proceeding
 
          ↓
 
 3. IMPLEMENT  (Normal Mode)
-   Switch sang Normal Mode, bắt đầu thực thi
-   → "Implement theo plan. Verify sau mỗi bước."
+   Switch to Normal Mode, start executing
+   → "Implement according to the plan. Verify after each step."
 
          ↓
 
 4. COMMIT
-   → "Commit với message mô tả đầy đủ và tạo PR"
+   → "Commit with a descriptive message and create a PR"
 ```
 
-### Khi nào dùng Plan Mode
+### When to use Plan Mode
 
 ```
-✅ Task sửa 3+ files
-✅ Chưa quen với phần codebase đang sửa
-✅ Feature mới phức tạp
-✅ Refactor lớn
+✅ Task touches 3+ files
+✅ Unfamiliar with the part of the codebase being changed
+✅ New complex feature
+✅ Large refactor
 
 ❌ Fix typo, rename variable
-❌ Task nhỏ rõ ràng có thể mô tả trong 1 câu
-❌ Add log line
+❌ Small task that can be described in one sentence
+❌ Add a log line
 ```
 
 ### Thinking Mode (Extended Thinking)
 
 ```bash
-claude --thinking          # Bật extended thinking
-/thinking on               # Toggle trong session
+claude --thinking          # Enable extended thinking
+/thinking on               # Toggle during session
 ```
 
-Dùng cho task đặc biệt phức tạp cần deep reasoning — không phải mọi task.
+Use for especially complex tasks requiring deep reasoning — not for every task.
 
 ---
 
-## 9. Context Management — Tài nguyên quý nhất
+## 9. Context Management — Your Most Precious Resource
 
-### Tại sao quan trọng
+### Why it matters
 
-Context window chứa: toàn bộ conversation + mỗi file Claude đọc + mỗi command output. Khi đầy, Claude bắt đầu "quên" instructions và mắc nhiều lỗi hơn.
+The context window holds: the entire conversation + every file Claude reads + every command output. When full, Claude starts "forgetting" instructions and making more mistakes.
 
-### Các lệnh quản lý context
-
-```bash
-/clear                          # Reset toàn bộ context
-/context                        # Xem % context window đang dùng
-/compact                        # Nén context, giữ lại phần quan trọng (khi context window 70-80%)
-/compact focus on API changes   # Nén với instruction cụ thể
-/btw <câu hỏi>                  # Hỏi nhanh — KHÔNG vào context, không tốn token
-Esc                             # Stop Claude ngay, giữ context
-Esc+Esc  /  /rewind             # Mở rewind menu, khôi phục checkpoint trước
-```
-
-### Rules quản lý context
-
-```
-✅ /clear sau mỗi feature hoàn chỉnh
-✅ /clear khi chuyển task loại khác (backend → frontend)
-✅ /clear sau khi sửa cùng lỗi 2 lần vẫn sai
-✅ Dùng subagent cho investigation → không tốn main context
-✅ /rename <tên> để đặt tên session, dễ resume sau
-
-❌ Không /clear giữa chừng khi task chưa xong
-❌ Không để một session chứa quá nhiều loại task khác nhau
-```
-
-### Resume session
+### Context management commands
 
 ```bash
-claude --continue       # Tiếp tục session gần nhất
-claude --resume         # Chọn từ danh sách session có tên
+/clear                          # Reset the entire context
+/context                        # See % of context window in use
+/compact                        # Compress context, keep important parts (when context window 70-80%)
+/compact focus on API changes   # Compress with specific instruction
+/btw <question>                 # Quick question — NOT added to context, no token cost
+Esc                             # Stop Claude immediately, keep context
+Esc+Esc  /  /rewind             # Open rewind menu, restore previous checkpoint
+```
+
+### Context management rules
+
+```
+✅ /clear after each completed feature
+✅ /clear when switching task types (backend → frontend)
+✅ /clear after fixing the same bug twice and still failing
+✅ Use subagents for investigation → saves main context
+✅ /rename <name> to name sessions for easy resuming
+
+❌ Don't /clear mid-task when work is incomplete
+❌ Don't let one session contain too many different types of tasks
+```
+
+### Resume sessions
+
+```bash
+claude --continue       # Continue the most recent session
+claude --resume         # Choose from list of named sessions
 ```
 
 ### Checkpoints
 
-Claude tự động checkpoint trước mỗi thay đổi. Dùng `Esc+Esc` → rewind menu để:
+Claude automatically checkpoints before every change. Use `Esc+Esc` → rewind menu to:
 - Restore conversation only
 - Restore code only
-- Restore cả hai
+- Restore both
 
 ---
 
-### Session Handoff — Vòng lặp không mất context
+### Session Handoff — Never Lose Context
 
-> Claude không có memory giữa các session. Session mới bắt đầu từ zero → mất thời gian re-orient, dễ đi sai hướng.
+> Claude has no memory between sessions. New sessions start from zero → wasted time re-orienting, easy to go in the wrong direction.
 
-**Giải pháp:** Dùng CLAUDE.md làm "bộ nhớ dài hạn" — cập nhật cuối mỗi session, đọc đầu mỗi session mới.
-
-```
-Kết thúc session → Update CLAUDE.md
-                         ↓
-Bắt đầu session mới → Claude đọc CLAUDE.md → Tiếp tục đúng chỗ
-```
-
-**Bước 1 — Kết thúc session đúng cách**
+**Solution:** Use CLAUDE.md as "long-term memory" — update at the end of each session, read at the start of each new one.
 
 ```
-"Trước khi kết thúc, cập nhật CLAUDE.md với:
- - Những gì đã làm xong
- - Trạng thái hiện tại của từng phần
- - Bước tiếp theo cần làm
- - Quyết định quan trọng & lý do"
+End session → Update CLAUDE.md
+                    ↓
+Start new session → Claude reads CLAUDE.md → Continue exactly where you left off
 ```
 
-**Bước 2 — Bắt đầu session mới đúng cách**
+**Step 1 — End the session properly**
 
 ```
-"Đọc CLAUDE.md cho tôi tóm tắt:
- Dự án đang ở đâu, bước tiếp theo là gì,
- và có gì tôi cần chú ý không?"
+"Before we finish, update CLAUDE.md with:
+ - What we completed
+ - Current state of each part
+ - Next steps
+ - Important decisions & reasoning"
 ```
 
-**Bước 3 — Plan Mode cho session lớn (> 15 phút)**
+**Step 2 — Start a new session properly**
 
 ```
-"Đọc CLAUDE.md và tóm tắt hiện trạng project,
- liệt kê những gì sẽ làm trong session hôm nay,
- ưu tiên những gì và theo thứ tự nào?"
+"Read CLAUDE.md and summarize for me:
+ Where the project stands, what the next steps are,
+ and anything I should be aware of?"
 ```
 
-**Gợi ý section trong CLAUDE.md để hỗ trợ handoff:**
+**Step 3 — Plan Mode for big sessions (> 15 min)**
+
+```
+"Read CLAUDE.md and summarize the current project state,
+ list what we'll do in today's session,
+ what to prioritize and in what order?"
+```
+
+**Suggested sections in CLAUDE.md to support handoff:**
 
 ```markdown
 ## Current State
-<!-- Claude cập nhật cuối mỗi session -->
-- **Last session:** [ngày] — [những gì đã xong]
-- **In progress:** [feature/task đang làm dở]
-- **Next:** [bước tiếp theo cụ thể]
+<!-- Claude updates at the end of each session -->
+- **Last session:** [date] — [what was completed]
+- **In progress:** [feature/task in progress]
+- **Next:** [specific next step]
 
 ## Key Decisions
-<!-- Không xóa — append khi có decision mới -->
-- [Decision] — [lý do] — [ngày]
+<!-- Don't delete — append new decisions as they're made -->
+- [Decision] — [reasoning] — [date]
 ```
 
-> **Tip:** Dành 2 phút cuối mỗi session update CLAUDE.md → tiết kiệm 10 phút đầu session tiếp theo. Xem chi tiết: [docs/vi/session-handoff.md](./docs/vi/session-handoff.md)
+> **Tip:** Spend 2 minutes at the end of each session updating CLAUDE.md → save 10 minutes at the start of every next session. See: [docs/en/session-handoff.md](./docs/en/session-handoff.md)
 
 ---
 
-## 10. MCP — Kết nối công cụ ngoài
+## 10. MCP — Connecting External Tools
 
-### MCP là gì
+### What is MCP
 
-Model Context Protocol = universal adapter kết nối Claude với external services. Mỗi MCP server expose tools, resources, prompts thành slash commands.
+Model Context Protocol = universal adapter connecting Claude to external services. Each MCP server exposes tools, resources, and prompts as slash commands.
 
-### Cài đặt
+### Installation
 
 ```bash
 claude mcp add playwright npx @playwright/mcp@latest
@@ -633,46 +622,46 @@ claude mcp add github gh auth login
 
 ### Deferred Tool Loading (2026)
 
-Claude Code không load đầy đủ tool schemas khi start — chỉ load tên, fetch schema khi cần. Giảm context overhead đáng kể khi dùng 50+ MCP tools.
+Claude Code doesn't load full tool schemas on start — only loads names, fetches schemas on demand. Significantly reduces context overhead when using 50+ MCP tools.
 
-### Các MCP server hữu ích
+### Useful MCP servers
 
-| Server | Dùng cho |
+| Server | Use for |
 |---|---|
-| **GitHub MCP** | Tạo PR, đọc issues, review comments |
-| **Playwright MCP** | UI testing tự động |
-| **Database MCP** | Query DB trực tiếp từ Claude |
-| **Figma MCP** | Đọc design, implement từ Figma |
-| **Notion MCP** | Đọc/viết tasks và documents |
+| **GitHub MCP** | Create PRs, read issues, review comments |
+| **Playwright MCP** | Automated UI testing |
+| **Database MCP** | Query DB directly from Claude |
+| **Figma MCP** | Read designs, implement from Figma |
+| **Notion MCP** | Read/write tasks and documents |
 
 ```
 Tips:
-- Cài gh CLI để Claude dùng GitHub API hiệu quả hơn
-- Claude tự học CLI mới: "Dùng foo-cli --help để học cách dùng, rồi giải quyết X."
-- Dùng /permissions để allowlist domains Claude được phép fetch
+- Install gh CLI for Claude to use GitHub API more effectively
+- Claude can learn new CLIs: "Use foo-cli --help to learn how to use it, then solve X."
+- Use /permissions to allowlist domains Claude can fetch
 ```
 
 ---
 
-## 11. Git Worktrees — Song song an toàn
+## 11. Git Worktrees — Safe Parallelism
 
-### Vấn đề
+### The problem
 
-Nhiều Claude sessions cùng sửa một thư mục → conflict. Git worktrees tạo **bản sao working tree riêng biệt** cho mỗi branch → sessions làm việc độc lập.
+Multiple Claude sessions editing the same directory → conflicts. Git worktrees create a **separate working tree copy** for each branch → sessions work independently.
 
-### Setup cơ bản
+### Basic setup
 
 ```bash
-# Tạo worktrees
+# Create worktrees
 git worktree add ../my-project-feature-a feat/feature-a
 git worktree add ../my-project-feature-b feat/feature-b
 
-# Chạy Claude Code trong từng worktree
+# Run Claude Code in each worktree
 cd ../my-project-feature-a && claude   # Terminal 1
 cd ../my-project-feature-b && claude   # Terminal 2
 ```
 
-### Subagent worktrees (tự động)
+### Subagent worktrees (automatic)
 
 ```yaml
 # .claude/agents/parallel-worker.md
@@ -681,31 +670,31 @@ isolation: worktree
 ---
 ```
 
-Subagent tự tạo worktree riêng, làm việc độc lập, cleanup khi xong.
+Subagent creates its own worktree, works independently, cleans up when done.
 
-### Pattern thực tế
+### Real-world pattern
 
 ```
-Worktree 1: Develop feature-auth
-Worktree 2: Review + fix bug production
-Worktree 3: Refactor module cũ
-→ 3 Claude sessions chạy song song, không conflict
+Worktree 1: Developing feature-auth
+Worktree 2: Reviewing + fixing production bug
+Worktree 3: Refactoring old module
+→ 3 Claude sessions running in parallel, no conflicts
 ```
 
 ---
 
-## 12. Prompting hiệu quả
+## 12. Effective Prompting
 
-### Nguyên tắc cơ bản
+### Core principles
 
-**Mô tả outcome, không micromanage cách làm:**
+**Describe the outcome, don't micromanage how:**
 
 ```
-❌ "Mở file users.py, tìm class User, thêm method validate_email..."
-✅ "Thêm email validation vào User model. Chạy tests sau khi xong."
+❌ "Open file users.py, find class User, add method validate_email..."
+✅ "Add email validation to the User model. Run tests when done."
 ```
 
-**Cung cấp verification criteria:**
+**Provide verification criteria:**
 
 ```
 ❌ "Implement email validation"
@@ -713,112 +702,113 @@ Worktree 3: Refactor module cũ
     user@example.com → True
     invalid → False
     user@.com → False
-    Chạy tests và confirm xanh hết."
+    Run tests and confirm all green."
 ```
 
-**Reference bằng `@`:**
+**Reference with `@`:**
 
 ```
-✅ "Follow pattern tương tự @back/app/services/user_service.py"
-✅ "Đọc @SPEC.md trước khi implement"
-✅ "Schema tại @back/app/schemas/user.py"
+✅ "Follow the same pattern as @back/app/services/user_service.py"
+✅ "Read @SPEC.md before implementing"
+✅ "Schema at @back/app/schemas/user.py"
 ```
 
-**Scope rõ ràng:**
+**Be specific about scope:**
 
 ```
 ❌ "Fix the login bug"
 
-✅ "User report login fail sau session timeout.
-    Check auth flow tại src/auth/, đặc biệt token refresh.
-    Viết failing test reproduce issue, rồi fix."
+✅ "User reports login fails after session timeout.
+    Check auth flow at src/auth/, especially token refresh.
+    Write a failing test that reproduces the issue, then fix it."
 ```
 
-### Để Claude phỏng vấn bạn khi task lớn/mơ hồ
+### Let Claude interview you for large/ambiguous tasks
 
 ```
-Tôi muốn build [mô tả ngắn].
+I want to build [brief description].
 
-Interview tôi chi tiết bằng AskUserQuestion tool.
-Hỏi về: implementation, UX, edge cases, tradeoffs, security.
-Đừng hỏi điều hiển nhiên — đào sâu vào phần khó tôi chưa nghĩ tới.
-Phỏng vấn đến khi cover hết, rồi viết spec ra SPEC.md.
+Interview me in detail using the AskUserQuestion tool.
+Ask about: implementation, UX, edge cases, tradeoffs, security.
+Don't ask about obvious things — dig into the hard parts I haven't thought about.
+Interview until everything is covered, then write the spec to SPEC.md.
 ```
 
-### Course-correct sớm
+### Course-correct early
 
 ```
-Esc          → Stop ngay khi thấy sai hướng
-Esc+Esc      → Rewind về checkpoint tốt gần nhất
+Esc          → Stop immediately when you see the wrong direction
+Esc+Esc      → Rewind to the nearest good checkpoint
 
-Sau 2 lần sửa cùng lỗi vẫn sai:
-  → /clear + prompt lại tốt hơn (đừng tiếp tục correction loop)
+After fixing the same bug twice and still failing:
+  → /clear + write a better prompt based on what you've learned
+    (don't continue the correction loop)
 
-Vague prompt OK khi đang explore:
+Vague prompts are OK when exploring:
   → "What would you improve in this file?"
 ```
 
 ---
 
-## 13. Anti-patterns phổ biến
+## 13. Common Anti-patterns
 
 ### Kitchen sink session
 
 ```
-❌ Một session: debug bug → thêm feature → refactor → setup CI/CD
-   → Context ngập rác, performance giảm
+❌ One session: debug bug → add feature → refactor → setup CI/CD
+   → Context filled with garbage, performance degrades
 
-✅ Fix: /clear giữa các task khác loại
+✅ Fix: /clear between different types of tasks
 ```
 
 ### Infinite correction loop
 
 ```
-❌ Claude sai → sửa → vẫn sai → sửa lại → context đầy failed attempts
+❌ Claude wrong → fix → still wrong → fix again → context full of failed attempts
 
-✅ Fix: Sau 2 lần vẫn sai → /clear, viết prompt tốt hơn dựa trên những gì học được
+✅ Fix: After 2 failures → /clear, write a better prompt based on what you learned
 ```
 
 ### Over-specified CLAUDE.md
 
 ```
-❌ CLAUDE.md > 150 dòng → Claude bỏ qua rules ở giữa
+❌ CLAUDE.md > 150 lines → Claude ignores middle rules
 
-✅ Fix: Prune ruthlessly. Dùng Skills/Subagents cho domain knowledge đặc thù.
+✅ Fix: Prune ruthlessly. Use Skills/Subagents for domain-specific knowledge.
 ```
 
 ### Trust-then-verify gap
 
 ```
-❌ Claude tạo code trông đúng nhưng không handle edge cases → ship ngay
+❌ Claude generates code that looks correct but doesn't handle edge cases → ship immediately
 
-✅ Fix: Luôn có verification (tests, scripts, screenshots).
-        Không verify = không ship.
+✅ Fix: Always verify (tests, scripts, screenshots).
+        No verification = don't ship.
 ```
 
 ### Infinite exploration
 
 ```
-❌ "Investigate toàn bộ codebase" → Claude đọc hàng trăm file → context đầy
+❌ "Investigate the entire codebase" → Claude reads hundreds of files → context full
 
-✅ Fix: Scope investigation hẹp hoặc dùng subagent Explore
+✅ Fix: Scope the investigation narrowly or use an Explore subagent
 ```
 
-### Không dùng Plan Mode cho task phức tạp
+### Skipping Plan Mode for complex tasks
 
 ```
-❌ Code ngay mà không explore → giải quyết sai problem, phải làm lại
+❌ Start coding immediately without exploring → solving the wrong problem, have to redo
 
-✅ Fix: Plan Mode cho task sửa 3+ files hoặc chưa quen code area
+✅ Fix: Use Plan Mode for tasks touching 3+ files or unfamiliar code areas
 ```
 
-### Merge AI output không review
+### Merging AI output without review
 
 ```
-❌ Claude không biết business context.
-   Output trông đúng về syntax nhưng sai về logic.
+❌ Claude doesn't know business context.
+   Output looks syntactically correct but logically wrong.
 
-✅ Fix: Luôn đọc diff trước khi commit. Human gate không được bỏ qua.
+✅ Fix: Always read the diff before committing. The human gate cannot be skipped.
 ```
 
 ---
@@ -828,34 +818,34 @@ Vague prompt OK khi đang explore:
 ### Session commands
 
 ```bash
-# Khởi động
-claude                              # Session mới
-claude --continue                   # Tiếp tục session gần nhất
-claude --resume                     # Chọn session để resume
-claude --permission-mode plan       # Bắt đầu ở Plan Mode
+# Starting up
+claude                              # New session
+claude --continue                   # Continue most recent session
+claude --resume                     # Choose session to resume
+claude --permission-mode plan       # Start in Plan Mode
 
-# Trong session
+# During session
 /clear                              # Reset context
-/context                            # Xem context usage (%)
-/compact                            # Nén context
-/compact focus on API changes       # Nén có chủ đích
-/btw <câu hỏi>                      # Hỏi nhanh không tốn context
-/rename <tên>                       # Đặt tên session
-/agents                             # Xem/tạo subagents
-/rewind                             # Mở checkpoint menu
-/thinking on                        # Bật extended thinking
+/context                            # View context usage (%)
+/compact                            # Compress context
+/compact focus on API changes       # Compress with intent
+/btw <question>                     # Quick question, no context cost
+/rename <name>                      # Name the session
+/agents                             # View/create subagents
+/rewind                             # Open checkpoint menu
+/thinking on                        # Enable extended thinking
 
 # Keyboard shortcuts
 Esc                                 # Stop Claude
 Esc+Esc                             # Stop + rewind
-Shift+Tab                           # Chuyển permission mode
-Ctrl+G                              # Mở plan trong editor
+Shift+Tab                           # Switch permission mode
+Ctrl+G                              # Open plan in editor
 ```
 
 ### Non-interactive (CI/scripts)
 
 ```bash
-claude -p "prompt"                              # Chạy một lần
+claude -p "prompt"                              # Run once
 claude -p "..." --output-format json            # Structured output
 claude --permission-mode auto -p "fix lint"     # Auto mode
 ```
@@ -863,7 +853,7 @@ claude --permission-mode auto -p "fix lint"     # Auto mode
 ### Plugin commands
 
 ```bash
-/plugin                             # Duyệt marketplace
+/plugin                             # Browse marketplace
 /plugin install <name>@claude-plugins-official
 ```
 
@@ -877,16 +867,16 @@ claude mcp remove <name>
 
 ---
 
-## Đóng góp
+## Contributing
 
-Mọi đóng góp đều được chào đón! Tạo issue hoặc pull request nếu bạn có tip hữu ích, pattern thực tế, hoặc phát hiện thông tin lỗi thời.
+All contributions welcome! Create an issue or pull request if you have useful tips, real-world patterns, or find outdated information.
 
 ---
 
 <div align="center">
 
-Made with ❤️ for the Vietnamese developer community
+Made with ❤️ for developers everywhere
 
-[🇬🇧 Read in English](./README.en.md)
+[🇻🇳 Đọc bằng tiếng Việt](./README.vi.md)
 
 </div>
